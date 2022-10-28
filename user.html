@@ -1,0 +1,32 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/user.css" />
+</head>
+<body>
+    <div class="title">
+          <span class="title_span">CYBERBANK</span>
+    </div>
+    <div class="holder small">
+        <div>Номер карты: <text id="cardId"></text></div>
+        <div>Баланс: <text id="cardBalance"></text></div>
+    </div>
+    <div class="holder">
+            <div class="in field">
+                <label for="recieverCardId">Получатель: </label>
+                <input class="inp" id="recieverCardId" type="text">
+            </div>
+            <div class="in field">
+                <label for="moneyAmount">Сумма: </label>
+                <input class="inp" id="moneyAmount" type="text">
+            </div>
+            <div class="in field">
+                <label for="cardPin">PIN: </label>
+                <input class="inp" id="cardPin" type="password">
+            </div>
+            <button class="butt" id="sendButton">Отправить</button>
+            <text class="error" id="errorText"></text>
+        </div>
+    </div>
+    <script type="text/javascript" src="/static/js/user.js"></script>
+</body>
