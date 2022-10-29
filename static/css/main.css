@@ -60,12 +60,6 @@ body {
     justify-content: center;
     padding: 1%;
     width: 55%;
-    background: black;
-    border: 0.6vw solid #00FCDA;
-    font-weight: 600;
-    font-size: 3vw;
-    font-style: italic;
-    color: #00FCDA;
     margin-top: 2vh;
 }
 .in {
@@ -142,3 +136,12 @@ label {
     color: #FF0000;
     margin-top: 1vw;
 }
+button {
+    background: black;
+    border: 0.6vw solid #00FCDA;
+    font-weight: 600;
+    font-size: 3vw;
+    font-style: italic;
+    color: #00FCDA;
+}
+button:active { background: rgb(33, 33, 33); }

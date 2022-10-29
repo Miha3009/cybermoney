@@ -18,7 +18,7 @@ import (
 
 var db *sql.DB
 var connStr string = "user=postgres password=1 dbname=postgres sslmode=disable"
-var adminPage string = "admin" //"j32JS36NbsdssOkfg8sLbgKcIhTs1tBd6cmsDuXvoiMxndOxtUfFLchJYi3AqDk8"
+var adminPage string = "j32JS36NbsdssOkfg8sLbgKcIhTs1tBd6cmsDuXvoiMxndOxtUfFLchJYi3AqDk8"
 
 type User struct {
 	Name     string
@@ -65,6 +65,9 @@ func createTransaction(t Transaction, password string) string {
 	if fromUser.Name == "" || toUser.Name == "" {
 		return "Пользователь не найден"
 	}
+        if t.FromName == t.ToName {
+                return "Нельзя отправить средства себе"
+        }
 	if fromUser.Password != password {
 		return "Неверный PIN код"
 	}
@@ -341,5 +344,5 @@ func main() {
 	http.HandleFunc("/"+adminPage+"/deleteCard", makeHandler(adminHandlerDeleteCard))
 	http.HandleFunc("/"+adminPage+"/getTransactions", makeHandler(adminHandlerGetTransactions))
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":80", nil))
 }

@@ -2,6 +2,7 @@ const table = document.getElementById('mainTable')
 const table2 = document.getElementById('secondTable')
 const myName = document.getElementById('myName')
 const updateButton = document.getElementById('updateButton')
+const downloadButton = document.getElementById('downloadButton')
 let href = document.location.href.split('/')
 href = "/" + href[href.length-1]
 
@@ -64,6 +65,7 @@ function addRow(cardIdText, cardBalanceText, cardPIN) {
   var changeBalanceButtonCell = row.insertCell()
   var changeBalanceButton = document.createElement("button")
   changeBalanceButton.innerText = 'Изменить'
+  changeBalanceButton.className = 'butt'
   changeBalanceButton.addEventListener('click', handleChangeBalance.bind(changeBalanceButton))
   changeBalanceButtonCell.appendChild(changeBalanceButton)
 
@@ -75,12 +77,14 @@ function addRow(cardIdText, cardBalanceText, cardPIN) {
   var setPasswordButtonCell = row.insertCell()
   var setPasswordButton = document.createElement("button")
   setPasswordButton.innerText = 'Сменить'
+  setPasswordButton.className = 'butt'
   setPasswordButton.addEventListener('click', handleSetPassword.bind(setPasswordButton))
   setPasswordButtonCell.appendChild(setPasswordButton)
 
   var deleteCardButtonCell = row.insertCell()
   var deleteCardButton = document.createElement("button")
   deleteCardButton.innerText = 'Удалить'
+  deleteCardButton.className = 'butt'
   deleteCardButton.addEventListener('click', handleDeleteCard.bind(deleteCardButton))
   deleteCardButtonCell.appendChild(deleteCardButton)
 }
@@ -93,6 +97,10 @@ function deleteAllRows2() {
   }
 }
 
+function convertDate(date) {
+  return date.split('T')[1].split('.')[0]
+}
+
 function addRow2(transaction) {
   var row = table2.insertRow()
   var fromName = row.insertCell()
@@ -102,7 +110,7 @@ function addRow2(transaction) {
   var amount = row.insertCell()
   amount.innerText = transaction.Amount
   var date = row.insertCell()
-  date.innerText = transaction.Date
+  date.innerText = convertDate(transaction.Date)
 }
 
 function updateUsers() {
@@ -133,6 +141,21 @@ xhr2.onload = function() {
 xhr2.send(JSON.stringify({ "Name": myName.value }))
 }
 
+function download() {
+xhr3 = new XMLHttpRequest()
+xhr3.open("POST", href + "/getTransactions")
+xhr3.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+xhr3.onload = function() {
+  let blob = new Blob([xhr3.response], {type: "application/json;charset=UTF-8"});
+  let link = document.createElement("a");
+  link.setAttribute("href", URL.createObjectURL(blob));
+  link.setAttribute("download", "transactions.json");
+  link.click();
+}
+xhr3.send(JSON.stringify({ "Name": myName.value }))
+}
+
 updateUsers()
 updateTransactions()
 updateButton.addEventListener('click', updateUsers)
+downloadButton.addEventListener('click', download)

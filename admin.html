@@ -2,12 +2,13 @@
 <link rel="stylesheet" type="text/css" href="/static/css/admin.css" />
 </head>
 <body>
-<div style="margin-bottom: 20"> Введите ваш ник: <input id="myName"></input><button id="updateButton">Обновить</button></div>
+<div class="holder" style="margin-bottom: 20"> Введите вашу карту: <input id="myName"></input><button class="butt2" id="updateButton">Обновить</button></div>
 <table id="mainTable">
-<tr><th>Ник</th><th>Баланс</th><th>Изменение баланса</th><th>Изменить</th><th>Текущий пароль</th><th>Сменить пароль</th><th>Удалить карту</th></tr>
+<tr><th>Номер карты</th><th>Баланс</th><th>Изменение баланса</th><th></th><th>Текущий PIN</th><th></th><th></th></tr>
 </table>
 <table id="secondTable">
-<tr><th>Отправитель</th><th>Получатель</th><th>Сумма</th><th>Дата<th></tr>
+<tr><th>Отправитель</th><th>Получатель</th><th>Сумма</th><th>Время</th></tr>
 </table>
+<div><button class="butt" id="downloadButton">Скачать все транзакции</button></div>
 <script type="text/javascript" src="/static/js/admin.js"></script>
 </body>
