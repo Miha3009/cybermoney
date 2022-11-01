@@ -99,7 +99,7 @@ function deleteAllRows2() {
 }
 
 function convertDate(date) {
-  return date.split('T')[1].split('.')[0]
+  return new Date(date).toLocaleTimeString()
 }
 
 function addRow2(transaction) {
