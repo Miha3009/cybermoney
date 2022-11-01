@@ -142,13 +142,13 @@ func getTransactions(name string) []Transaction {
 		for rows1.Next() {
 			t := Transaction{}
 			rows1.Scan(&t.Id, &t.FromName, &t.ToName, &t.Amount, &t.Date)
-			t.Date.UTC().Add(time.Duration(time.Hour * 3))
+			t.Date = t.Date.UTC().Add(time.Duration(time.Hour * 3))
 			ts = append(ts, t)
 		}
 		for rows2.Next() {
 			t := Transaction{}
 			rows2.Scan(&t.Id, &t.FromName, &t.ToName, &t.Amount, &t.Date)
-			t.Date.UTC().Add(time.Duration(time.Hour * 3))
+			t.Date = t.Date.UTC().Add(time.Duration(time.Hour * 3))
 			ts = append(ts, t)
 		}
 	}
