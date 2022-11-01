@@ -103,7 +103,8 @@ changeClass2('butt', 'marginTop', 1.5*vh);
 }
 
 h = window.location.href.split('/')
-userName = decodeURI(h[h.length-1])
+h = h[h.length-1]
+userName = CryptoJS.enc.Utf16.stringify(CryptoJS.enc.Hex.parse(h))
 cardId.innerText = userName
 updateBalance()
 vw = window.visualViewport.width * 0.01;

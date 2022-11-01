@@ -11,7 +11,7 @@ xhr.send(JSON.stringify({ "Name": cardId.value, "Password": cardPin.value }))
 xhr.onload = function() {
   let res = JSON.parse(xhr.response)
   if (res.Text === "OK") {
-     window.location.href=window.location.href+'/user/'+cardId.value
+     window.location.href=window.location.href+'/user/'+CryptoJS.enc.Hex.stringify(CryptoJS.enc.Utf16.parse(cardId.value))
   } else {
     errorText.innerText=res.Text
   }
