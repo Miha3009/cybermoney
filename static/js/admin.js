@@ -3,6 +3,7 @@ const table2 = document.getElementById('secondTable')
 const myName = document.getElementById('myName')
 const updateButton = document.getElementById('updateButton')
 const downloadButton = document.getElementById('downloadButton')
+const deleteAllButton = document.getElementById('deleteAllButton')
 let href = document.location.href.split('/')
 href = "/" + href[href.length-1]
 
@@ -155,7 +156,21 @@ xhr3.onload = function() {
 xhr3.send(JSON.stringify({ "Name": myName.value }))
 }
 
+function deleteAll() {
+  result = confirm("Вы уверены, что хотите удалить все транзакции?");
+  if (result) {
+  xhr = new XMLHttpRequest()
+  xhr.open("POST", href + "/deleteTransactions")
+  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+  xhr.send(JSON.stringify({}))
+  xhr.onload = function() {
+    updateUsers()
+  }
+  }
+}
+
 updateUsers()
 updateTransactions()
 updateButton.addEventListener('click', updateUsers)
 downloadButton.addEventListener('click', download)
+deleteAllButton.addEventListener('click', deleteAll)

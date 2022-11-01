@@ -5,6 +5,7 @@ const moneyAmount = document.getElementById('moneyAmount')
 const cardPin = document.getElementById('cardPin')
 const sendButton = document.getElementById('sendButton')
 const errorText = document.getElementById('errorText')
+const successText = document.getElementById('successText')
 
 function updateBalanceLoop() {
 setTimeout(updateBalance, 5000)
@@ -22,6 +23,14 @@ xhr.onload = function() {
 updateBalanceLoop()
 }
 
+function clearError(){
+    errorText.innerText=""
+}
+
+function clearSuccess(){
+    successText.innerText=""
+}
+
 function send(){
 xhr = new XMLHttpRequest()
 xhr.open("POST", "/user/" + userName)
@@ -31,8 +40,12 @@ xhr.onload = function() {
   let res = JSON.parse(xhr.response)
   if (res.Text !== "OK") {
     errorText.innerText=res.Text
+    successText.innerText=""
+    setTimeout(clearError, 5000)
   } else {
     errorText.innerText=""
+    successText.innerText="Средства отправлены"
+    setTimeout(clearSuccess, 5000)
     cardBalance.innerText=parseInt(cardBalance.innerText)-parseInt(moneyAmount.value)
   }
   cardPin.value=""
@@ -84,13 +97,13 @@ changeClass('inp');
 changeClass('label');
 changeClass('holder');
 changeClass('error');
+changeClass('success');
 changeClass2('in', 'paddingTop', vh);
 changeClass2('butt', 'marginTop', 1.5*vh);
-//document.getElementsByClassName('stretch')[0].width
 }
 
 h = window.location.href.split('/')
-userName = h[h.length-1]
+userName = decodeURI(h[h.length-1])
 cardId.innerText = userName
 updateBalance()
 vw = window.visualViewport.width * 0.01;

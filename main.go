@@ -34,16 +34,24 @@ type Transaction struct {
 	Date     time.Time
 }
 
+var validPath = regexp.MustCompile("^/(user|static|balance)/([a-zA-Z0-9а-яА-Я]+)$")
+
 func createUser(user User) string {
 	if user.Name == "" {
 		return "Номер карты пустой"
+	}
+	if validPath.FindStringSubmatch("/user/"+user.Name) == nil {
+		return "Некорректный номер карты"
+	}
+	if user.Password == "" {
+		return "Пустой PIN"
 	}
 	u := getUser(user.Name)
 	if u.Name == user.Name {
 		if u.Password == user.Password {
 			return "OK"
 		} else {
-			return "Неверный пароль"
+			return "Неверный PIN"
 		}
 	}
 	result, err := db.Exec("insert into Users (name, password, balance) values ($1, $2, $3)",
@@ -65,14 +73,14 @@ func createTransaction(t Transaction, password string) string {
 	if fromUser.Name == "" || toUser.Name == "" {
 		return "Пользователь не найден"
 	}
-        if t.FromName == t.ToName {
-                return "Нельзя отправить средства себе"
-        }
+	if t.FromName == t.ToName {
+		return "Нельзя отправить средства себе"
+	}
 	if fromUser.Password != password {
 		return "Неверный PIN код"
 	}
 	if fromUser.Balance < t.Amount {
-		return "Не достаточно средств"
+		return "Недостаточно средств"
 	}
 	if t.Amount <= 0 {
 		return "Некорректная сумма"
@@ -134,11 +142,13 @@ func getTransactions(name string) []Transaction {
 		for rows1.Next() {
 			t := Transaction{}
 			rows1.Scan(&t.Id, &t.FromName, &t.ToName, &t.Amount, &t.Date)
+			t.Date.UTC().Add(time.Duration(time.Hour * 3))
 			ts = append(ts, t)
 		}
 		for rows2.Next() {
 			t := Transaction{}
 			rows2.Scan(&t.Id, &t.FromName, &t.ToName, &t.Amount, &t.Date)
+			t.Date.UTC().Add(time.Duration(time.Hour * 3))
 			ts = append(ts, t)
 		}
 	}
@@ -151,7 +161,7 @@ func getTransactions(name string) []Transaction {
 
 func setPassword(name, password string) bool {
 	user := getUser(name)
-	if user.Name == "" {
+	if user.Name == "" || password == "" {
 		return false
 	}
 	db.Exec("update Users set password = $1 where name = $2", password, name)
@@ -301,6 +311,13 @@ func adminHandlerGetTransactions(w http.ResponseWriter, r *http.Request, title s
 	w.Write(resp)
 }
 
+func adminHandlerDeleteTransactions(w http.ResponseWriter, r *http.Request, title string) {
+	_, _ = db.Exec("delete from Transactions")
+	w.Header().Set("Content-Type", "application/json")
+	resp, _ := json.Marshal(Message{Text: "OK"})
+	w.Write(resp)
+}
+
 var templates = template.Must(template.ParseFiles("main.html", "user.html", "admin.html"))
 
 func renderTemplate(w http.ResponseWriter, tmpl string) {
@@ -309,8 +326,6 @@ func renderTemplate(w http.ResponseWriter, tmpl string) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
-
-var validPath = regexp.MustCompile("^/(user|static|balance)/([a-zA-Z0-9]+)$")
 
 func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -343,6 +358,7 @@ func main() {
 	http.HandleFunc("/"+adminPage+"/setPassword", makeHandler(adminHandlerSetPassword))
 	http.HandleFunc("/"+adminPage+"/deleteCard", makeHandler(adminHandlerDeleteCard))
 	http.HandleFunc("/"+adminPage+"/getTransactions", makeHandler(adminHandlerGetTransactions))
+	http.HandleFunc("/"+adminPage+"/deleteTransactions", makeHandler(adminHandlerDeleteTransactions))
 
 	log.Fatal(http.ListenAndServe(":80", nil))
 }

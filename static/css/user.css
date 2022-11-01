@@ -134,6 +134,10 @@ label {
     color: #FF0000;
     padding-top: 0.5vw;
 }
+.success {
+    padding-top: 0.5vw;
+    color: #00FF00;
+}
 button {
     background: black;
     border: 0.5vw solid #00FCDA;
