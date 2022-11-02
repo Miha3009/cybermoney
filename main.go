@@ -38,20 +38,20 @@ var validPath = regexp.MustCompile("^/(user|static|balance)/([a-zA-Z0-9а-яА-�
 
 func createUser(user User) string {
 	if user.Name == "" {
-		return "Номер карты пустой"
+		return "Пустой логин"
 	}
 	if validPath.FindStringSubmatch("/user/"+user.Name) == nil {
-		return "Некорректный номер карты"
+		return "Некорректный логин"
 	}
 	if user.Password == "" {
-		return "Пустой PIN"
+		return "Пустой пароль"
 	}
 	u := getUser(user.Name)
 	if u.Name == user.Name {
 		if u.Password == user.Password {
 			return "OK"
 		} else {
-			return "Неверный PIN"
+			return "Неверный пароль"
 		}
 	}
 	result, err := db.Exec("insert into Users (name, password, balance) values ($1, $2, $3)",
@@ -77,7 +77,7 @@ func createTransaction(t Transaction, password string) string {
 		return "Нельзя отправить средства себе"
 	}
 	if fromUser.Password != password {
-		return "Неверный PIN код"
+		return "Неверный пароль"
 	}
 	if fromUser.Balance < t.Amount {
 		return "Недостаточно средств"
